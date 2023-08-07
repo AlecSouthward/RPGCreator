@@ -42,8 +42,11 @@ public class SwitchManager : MonoBehaviour
     }
 
     // inverts a Switch's state by name
-    public void ToggleSwitchState(string switchName)
+    public static void ToggleSwitchState(string switchName)
     {
+        // stores the static instance of switches
+        Switch[] switches = instance.switches;
+
         // loops through the list of switches
         for (int switchIndex = 0; switchIndex < switches.Length; switchIndex++)
         {

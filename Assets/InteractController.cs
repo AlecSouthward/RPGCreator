@@ -1,7 +1,7 @@
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
-using UnityEngine.InputSystem;
+using static GameManaging;
 
 public class InteractController : MonoBehaviour
 {
@@ -23,9 +23,9 @@ public class InteractController : MonoBehaviour
     {
         //canInteract = DialogueManager.instance.inDialogue == false;
 
-        if (canInteract)
+        if (canInteract && GameState.currentState == GameState.GameStates.Playing)
         {
-            Vector3 interactPos = (Vector3)playerController.facingDir + transform.position;
+            Vector3 interactPos = playerController.facingDir + transform.position;
             Interactible interactCheck = IsInteractible(interactPos);
 
             Debug.DrawLine(transform.position, interactPos, Color.red, 10);
@@ -35,9 +35,12 @@ public class InteractController : MonoBehaviour
                 interactCheck.Interact();
 
                 canInteract = false;
+
+                /*
                 interactCheck.onInteractFinish.AddListener(() => {
                     canInteract = true;
                 });
+                */
             }
             else
             {

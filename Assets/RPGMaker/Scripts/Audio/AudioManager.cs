@@ -32,7 +32,8 @@ public class AudioManager : MonoBehaviour
         StartCoroutine(SoundLoop());
     }
 
-    public void PlaySound(AudioClip clip, float volume)
+    //AudioClip clip, float volume = default
+    public void PlaySound(AudioClip clip = null, float volume = 1)
     {
         if (activeAudioSources.Count == 0 || AudioClipCount(clip) < maxSameSound)
         {
@@ -106,7 +107,7 @@ public class AudioManager : MonoBehaviour
         return audioClipSources;
     }
 
-    public IEnumerator StopSound(AudioClip clip, float delay)
+    public IEnumerator StopSound(AudioClip clip, float delay = default)
     {
         yield return new WaitForSeconds(delay);
 

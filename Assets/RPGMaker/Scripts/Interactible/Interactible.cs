@@ -11,7 +11,7 @@ public interface Interactible
     /// HEHEHAHA
     /// </remarks>
     /// 
-    /// <param name="myBool">Parameter value to pass.</param>
+    /// <param name="myVar">Parameter value to pass.</param>
     /// 
     /// <returns>Returns an integer based on the passed value.</returns>
     public void Interact();

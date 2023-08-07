@@ -1,8 +1,7 @@
-using System;
 using System.Collections;
-using System.Net;
-using Unity.VisualScripting;
 using UnityEngine;
+
+using static GameManaging;
 
 public class PlayerController : MonoBehaviour
 {
@@ -15,7 +14,7 @@ public class PlayerController : MonoBehaviour
     InputManager input;
     Vector2 inputAxis;
     bool isMoving = false;
-    bool canMove;
+    readonly bool canMove;
 
     public Vector3 facingDir;
 
@@ -32,7 +31,7 @@ public class PlayerController : MonoBehaviour
             instance = this;
         }
     }
-
+    
     private void Start()
     {
         input = InputManager.instance;
@@ -40,16 +39,19 @@ public class PlayerController : MonoBehaviour
 
     private void Update()
     {
-        inputAxis = input.moveAxis;
-
-        if (inputAxis.sqrMagnitude > 0 && inputAxis.sqrMagnitude <= 1)
+        if(GameState.IsState(GameState.GameStates.Playing))
         {
-            facingDir = inputAxis;
-            Vector3 newPosition = transform.position + facingDir;
+            inputAxis = input.moveAxis;
 
-            if (!isMoving && CanMove(newPosition))
+            if (inputAxis.sqrMagnitude > 0 && inputAxis.sqrMagnitude <= 1)
             {
-                StartCoroutine(Move(newPosition));
+                facingDir = inputAxis;
+                Vector3 newPosition = transform.position + facingDir;
+
+                if (!isMoving && CanMove(newPosition))
+                {
+                    StartCoroutine(Move(newPosition));
+                }
             }
         }
     }
