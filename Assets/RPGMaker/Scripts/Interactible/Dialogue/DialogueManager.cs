@@ -46,7 +46,7 @@ public class DialogueManager : MonoBehaviour
     // used as a way to setup the dialogue
     public static void StartDialogue(DialogueInteract dialogueInteract)
     {
-        GameState.ChangeState(GameState.GameStates.Busy);
+        GameState.ChangeState(GameState.States.Busy);
         instance.inDialogue = true;
 
         // starts the dialogueIn animation
@@ -60,7 +60,7 @@ public class DialogueManager : MonoBehaviour
         else
         {
             Debug.LogWarning(dialogueInteract.transform.name + " has no dialogue lines to display");
-            GameState.ChangeState(GameState.GameStates.Playing);
+            GameState.ChangeState(GameState.States.Playing);
         }
     }
 
@@ -129,7 +129,7 @@ public class DialogueManager : MonoBehaviour
             dialogueInteract.onInteractFinish.Invoke();
 
             // change the game state back to playing
-            GameState.ChangeState(GameState.GameStates.Playing);
+            GameState.ChangeState(GameState.States.Playing);
 
             // resets the texts and image to be empty
             instance.inDialogue = false;

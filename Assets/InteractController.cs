@@ -23,7 +23,7 @@ public class InteractController : MonoBehaviour
     {
         //canInteract = DialogueManager.instance.inDialogue == false;
 
-        if (canInteract && GameState.currentState == GameState.GameStates.Playing)
+        if (canInteract && GameState.CurrentState == GameState.States.Playing)
         {
             Vector3 interactPos = playerController.facingDir + transform.position;
             Interactible interactCheck = IsInteractible(interactPos);

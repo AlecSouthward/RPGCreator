@@ -1,6 +1,5 @@
 using System.Collections;
 using UnityEngine;
-
 using static GameManaging;
 
 public class PlayerController : MonoBehaviour
@@ -39,7 +38,7 @@ public class PlayerController : MonoBehaviour
 
     private void Update()
     {
-        if(GameState.IsState(GameState.GameStates.Playing))
+        if(GameState.IsState(GameState.States.Playing))
         {
             inputAxis = input.moveAxis;
 
