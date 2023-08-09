@@ -6,7 +6,6 @@ using static GameManaging;
 public class InteractController : MonoBehaviour
 {
     [SerializeField] DialogueInteract dialogue;
-    [SerializeField] bool canInteract = true;
 
     private PlayerController playerController;
     [SerializeField]
@@ -23,29 +22,14 @@ public class InteractController : MonoBehaviour
     {
         //canInteract = DialogueManager.instance.inDialogue == false;
 
-        if (canInteract && GameState.CurrentState == GameState.States.Playing)
+        if (GameState.CurrentState == GameState.States.Playing)
         {
             Vector3 interactPos = playerController.facingDir + transform.position;
             Interactible interactCheck = IsInteractible(interactPos);
 
             Debug.DrawLine(transform.position, interactPos, Color.red, 10);
 
-            if (interactCheck != null)
-            {
-                interactCheck.Interact();
-
-                canInteract = false;
-
-                /*
-                interactCheck.onInteractFinish.AddListener(() => {
-                    canInteract = true;
-                });
-                */
-            }
-            else
-            {
-                Debug.Log("Nothing to interact with.");
-            }
+            interactCheck?.Interact();
         }
     }
 

@@ -19,7 +19,7 @@ public class InputManager : MonoBehaviour
     /// Updated every frame to match the user input.
     /// </summary>
     [HideInInspector]
-    public Vector2 moveAxis { get; private set; }
+    public Vector2 MoveAxis { get; private set; }
 
     [Header("Input Events")]
     /// <summary>
@@ -54,7 +54,7 @@ public class InputManager : MonoBehaviour
         inputs.Player.Interact.performed += _ => interact.Invoke();
         inputs.Player.Back.performed += _ => back.Invoke();
 
-        moveAxis = inputs.Player.Move.ReadValue<Vector2>();
+        MoveAxis = inputs.Player.Move.ReadValue<Vector2>();
     }
 
     private void OnEnable() { inputs.Enable(); }

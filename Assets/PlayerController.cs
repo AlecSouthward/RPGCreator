@@ -13,7 +13,6 @@ public class PlayerController : MonoBehaviour
     InputManager input;
     Vector2 inputAxis;
     bool isMoving = false;
-    readonly bool canMove;
 
     public Vector3 facingDir;
 
@@ -40,7 +39,7 @@ public class PlayerController : MonoBehaviour
     {
         if(GameState.IsState(GameState.States.Playing))
         {
-            inputAxis = input.moveAxis;
+            inputAxis = input.MoveAxis;
 
             if (inputAxis.sqrMagnitude > 0 && inputAxis.sqrMagnitude <= 1)
             {

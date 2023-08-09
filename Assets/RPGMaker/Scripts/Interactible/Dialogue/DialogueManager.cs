@@ -4,6 +4,7 @@ using TMPro;
 using UnityEngine.Events;
 using System.Collections;
 using static GameManaging;
+using Unity.VisualScripting;
 
 // this script is used as a manager for dialogue variables
 //[ExecuteInEditMode]
@@ -28,6 +29,8 @@ public class DialogueManager : MonoBehaviour
 
     //[HideInInspector]
     public bool inDialogue = false;
+
+    private string prevLineName;
 
     private void Awake()
     {
@@ -68,6 +71,12 @@ public class DialogueManager : MonoBehaviour
     {
         // the current line of dialogue
         DialogueInteract.DialogueLine line = dialogueInteract.dialogueLines[lineIndex];
+        
+        bool mustSkip = false;
+        InputManager.instance.interact.AddListener(() =>
+        {
+            mustSkip = true;
+        });
 
         instance.text.text = line.dialogue;
         instance.text.maxVisibleCharacters = 0;
@@ -100,8 +109,15 @@ public class DialogueManager : MonoBehaviour
         {
             instance.text.maxVisibleCharacters = charIndex;
 
+            // if the player presses the interact key
+            // during dialogue, skip the dialogue
+            if (mustSkip) break;
+
             yield return new WaitForSeconds(instance.textDelay);
         }
+
+        mustSkip = false;
+        instance.text.maxVisibleCharacters = instance.text.text.Length;
 
         // events for checking if the player has pressed the interact button
         var trigger = false;
@@ -120,13 +136,13 @@ public class DialogueManager : MonoBehaviour
         else
         {
             // plays the dialogueOut animation and delays the script by the animation clip length
-            float animationDelay = instance.animator.GetCurrentAnimatorStateInfo(0).normalizedTime;
+            float animationDelay = instance.animator.GetCurrentAnimatorStateInfo(0).length;
             instance.animator.SetBool("Active", false);
 
             yield return new WaitForSeconds(animationDelay);
 
             // invokes the on finish event
-            dialogueInteract.onInteractFinish.Invoke();
+            //dialogueInteract.onInteractFinish.Invoke();
 
             // change the game state back to playing
             GameState.ChangeState(GameState.States.Playing);
