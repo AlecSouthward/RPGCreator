@@ -1,3 +1,4 @@
+using System;
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
@@ -5,9 +6,8 @@ using static GameManaging;
 
 public class InteractController : MonoBehaviour
 {
-    [SerializeField] DialogueInteract dialogue;
-
     private PlayerController playerController;
+
     [SerializeField]
     private LayerMask interactLayer;
 
@@ -29,7 +29,11 @@ public class InteractController : MonoBehaviour
 
             Debug.DrawLine(transform.position, interactPos, Color.red, 10);
 
-            interactCheck?.Interact();
+            if(interactCheck != null)
+            {
+                Debug.Log("Interacting with " + interactCheck);
+                interactCheck.Interact();
+            }
         }
     }
 

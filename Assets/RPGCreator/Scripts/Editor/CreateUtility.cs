@@ -2,6 +2,7 @@ using System;
 using UnityEngine;
 using UnityEditor;
 using UnityEditor.SceneManagement;
+using UnityEngine.SceneManagement;
 
 public static class CreateUtility
 {
@@ -12,6 +13,17 @@ public static class CreateUtility
         
         newObject.name = name;
         Place(newObject);
+    }
+
+    public static void CreateScene(string path, string name)
+    {
+        //SceneAsset scenePrefab = Resources.Load(path) as SceneAsset;
+
+        // creates a new empty scene (WIP)
+        Scene newScene = EditorSceneManager.NewScene(NewSceneSetup.EmptyScene, NewSceneMode.Additive);
+        newScene.name = name;
+
+        EditorSceneManager.MarkSceneDirty(newScene);
     }
 
     public static void Place(GameObject gameObject)

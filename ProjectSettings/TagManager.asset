@@ -11,10 +11,10 @@ TagManager:
   - 
   - Water
   - UI
-  - Interactible
+  - 
   - Obstacle
-  - 
-  - 
+  - Interactible/Object
+  - Interactible/Non-Object
   - 
   - 
   - 

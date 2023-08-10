@@ -1,4 +1,5 @@
 // the interface used for all interactibles
+using UnityEngine;
 using UnityEngine.Events;
 
 public interface Interactible

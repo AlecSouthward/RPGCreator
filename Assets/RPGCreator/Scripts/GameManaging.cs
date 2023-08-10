@@ -20,8 +20,12 @@ public class GameManaging : MonoBehaviour
         /// Unloads the old room scene and will load the specified scene (by string) asynchronously.
         /// </summary>
         /// <param name="newRoomName">String for the new room's scene. Scene must be in build settings.</param>
-        public static IEnumerator ChangeRoom(string newRoomName)
+        public static IEnumerator ChangeRoom(string newRoomName, Vector2 playerNewPos)
         {
+            // sets the game's state to busy, so the player
+            // cannot move while loading
+            GameState.ChangeState(GameState.States.Busy);
+
             // TODO: transition animation between loading of rooms
 
             // ! TODO !: if the newRoomName is an invalid scene name,
@@ -43,7 +47,7 @@ public class GameManaging : MonoBehaviour
                     return newSceneLoad.isDone && oldSceneUnload.isDone;
                 });
 
-                Debug.Log("Switched to new room: " + newRoomName + " from room: " + RoomName);
+                Debug.Log("Switched to new room: " + newRoomName + ", from room: " + RoomName);
             }
             else
             {
@@ -59,8 +63,14 @@ public class GameManaging : MonoBehaviour
             // sets the old room variables to the new one
             RoomScene = SceneManager.GetSceneByName(newRoomName);
 
+            // sets the player position to the new position
+            PlayerController.instance.transform.position = playerNewPos;
+
             RoomName = RoomScene.name;
             RoomNum = RoomScene.buildIndex;
+
+            // resets the game's state to playing
+            GameState.ChangeState(GameState.States.Playing);
         }
     }
 
