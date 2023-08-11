@@ -3,6 +3,7 @@ using UnityEngine;
 using UnityEditor;
 using UnityEditor.SceneManagement;
 using UnityEngine.SceneManagement;
+using System.IO;
 
 public static class CreateUtility
 {
@@ -15,13 +16,17 @@ public static class CreateUtility
         Place(newObject);
     }
 
-    public static void CreateScene(string path, string name)
+    public static void CreateScene(string managerPath, string name)
     {
-        //SceneAsset scenePrefab = Resources.Load(path) as SceneAsset;
-
         // creates a new empty scene (WIP)
         Scene newScene = EditorSceneManager.NewScene(NewSceneSetup.EmptyScene, NewSceneMode.Additive);
         newScene.name = name;
+
+        GameObject roomManager = GameObject.Instantiate(Resources.Load(managerPath)) as GameObject;
+
+        StageUtility.PlaceGameObjectInCurrentStage(roomManager);
+        SceneManager.MoveGameObjectToScene(roomManager, newScene);
+        roomManager.name = "RoomManager";
 
         EditorSceneManager.MarkSceneDirty(newScene);
     }
@@ -40,7 +45,6 @@ public static class CreateUtility
         Undo.RegisterCreatedObjectUndo(gameObject, $"Create Object: {gameObject.name}");
         Selection.activeGameObject = gameObject;
         
-
         // For prefabs, let's mark the scene as dirty for saving
         EditorSceneManager.MarkSceneDirty(EditorSceneManager.GetActiveScene());
     }

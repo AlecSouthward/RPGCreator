@@ -17,5 +17,7 @@ public interface Interactible
     /// <returns>Returns an integer based on the passed value.</returns>
     public void Interact();
 
+    // really need to think of a way to serialize
+    // these UnityEvents (maybe try Action?)
     public UnityEvent onInteractFinish { get; set; }
 }

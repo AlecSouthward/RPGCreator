@@ -16,7 +16,7 @@ public class DialogueInteract : MonoBehaviour, Interactible
         if (switchEnable.Length > 0 && SwitchManager.instance.GetSwitchState(switchEnable))
         {
             Debug.Log("Starting dialogue '" + transform.name + "'.");
-            DialogueManager.StartDialogue(this);
+            DialogueManager.StartDialogue(dialogueLines, this);
         }
     }
 

@@ -5,6 +5,7 @@ using UnityEngine.Events;
 using System.Collections;
 using static GameManaging;
 using Unity.VisualScripting;
+using System.Collections.Generic;
 
 // this script is used as a manager for dialogue variables
 //[ExecuteInEditMode]
@@ -27,9 +28,6 @@ public class DialogueManager : MonoBehaviour
     [Tooltip("If no Animator is specified, no animation will be played")]
     public Animator animator;
 
-    //[HideInInspector]
-    public bool inDialogue = false;
-
     private string prevLineName;
 
     private void Awake()
@@ -47,30 +45,37 @@ public class DialogueManager : MonoBehaviour
     }
 
     // used as a way to setup the dialogue
-    public static void StartDialogue(DialogueInteract dialogueInteract)
+    public static void StartDialogue(
+        DialogueInteract.DialogueLine[] dialogueLines,
+        DialogueInteract dialogueInteract = null)
     {
-        GameState.ChangeState(GameState.States.Busy);
-        instance.inDialogue = true;
-
-        // starts the dialogueIn animation
-        instance.animator.SetBool("Active", true);
-
         // fetches all of the needed variables from DialogueManager
-        if (dialogueInteract.dialogueLines != null)
+        if (dialogueLines.Length > 0)
         {
-            instance.StartCoroutine(NextLine(0, dialogueInteract));
+            GameState.ChangeState(GameState.States.Busy);
+
+            // starts the dialogueIn animation
+            instance.animator.SetBool("Active", true);
+
+            if (!dialogueInteract)
+            {
+                instance.StartCoroutine(NextLine(0, dialogueLines[0]));
+            }
+            else
+            {
+                instance.StartCoroutine(NextLine(0, dialogueLines[0], dialogueInteract));
+            }
         }
         else
         {
-            Debug.LogWarning(dialogueInteract.transform.name + " has no dialogue lines to display");
-            GameState.ChangeState(GameState.States.Playing);
+            Debug.LogError("No dialogue lines to display!");
         }
     }
 
-    private static IEnumerator NextLine(int lineIndex, DialogueInteract dialogueInteract)
+    private static IEnumerator NextLine(int lineIndex, DialogueInteract.DialogueLine line, DialogueInteract dialogueInteract = null)
     {
         // the current line of dialogue
-        DialogueInteract.DialogueLine line = dialogueInteract.dialogueLines[lineIndex];
+        //DialogueInteract.DialogueLine line = dialogueInteract.dialogueLines[lineIndex];
         
         bool mustSkip = false;
         InputManager.instance.interact.AddListener(() =>
@@ -129,9 +134,11 @@ public class DialogueManager : MonoBehaviour
         yield return new WaitUntil(() => trigger);
         interact.RemoveListener(action.Invoke);
 
-        if (dialogueInteract.dialogueLines.Length > lineIndex + 1)
+        if (dialogueInteract && dialogueInteract.dialogueLines.Length > lineIndex + 1)
         {
-            instance.StartCoroutine(NextLine(lineIndex + 1, dialogueInteract));
+            instance.StartCoroutine(NextLine(
+                lineIndex + 1, dialogueInteract.dialogueLines[lineIndex + 1], dialogueInteract
+            ));
         }
         else
         {
@@ -148,7 +155,6 @@ public class DialogueManager : MonoBehaviour
             GameState.ChangeState(GameState.States.Playing);
 
             // resets the texts and image to be empty
-            instance.inDialogue = false;
             instance.text.text = "";
             instance.nameText.text = "";
             instance.image.sprite = null;

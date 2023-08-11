@@ -20,6 +20,6 @@ public static class CustomObjects
     [MenuItem("GameObject/RPG/Room", priority = 2)]
     public static void CreateRoom(MenuCommand menuCommand)
     {
-        CreateUtility.CreateScene(prefabPath + "Room", "Room");
+        CreateUtility.CreateScene(prefabPath + "RoomManager", "Room");
     }
 }
