@@ -6,7 +6,7 @@ using UnityEngine.UI;
 
 public class DialogueInteract : MonoBehaviour, Interactible
 {
-    public DialogueLine[] dialogueLines;
+    public DialogueManager.DialogueLine[] dialogueLines;
     public UnityEvent onInteractFinish { get; set; }
     [SerializeField] string switchEnable;
 
@@ -15,17 +15,7 @@ public class DialogueInteract : MonoBehaviour, Interactible
     {
         if (switchEnable.Length > 0 && SwitchManager.instance.GetSwitchState(switchEnable))
         {
-            Debug.Log("Starting dialogue '" + transform.name + "'.");
-            DialogueManager.StartDialogue(dialogueLines, this);
+            DialogueManager.StartDialogue(dialogueLines);
         }
-    }
-
-    // used to easily manage dialogue lines
-    [System.Serializable]
-    public class DialogueLine
-    {
-        public string name;
-        public string dialogue;
-        public Sprite image;
     }
 }

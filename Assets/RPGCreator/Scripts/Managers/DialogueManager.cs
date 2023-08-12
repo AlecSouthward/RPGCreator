@@ -1,34 +1,32 @@
 using UnityEngine;
 using UnityEngine.UI;
 using TMPro;
-using UnityEngine.Events;
 using System.Collections;
-using static GameManaging;
-using Unity.VisualScripting;
-using System.Collections.Generic;
 
-// this script is used as a manager for dialogue variables
-//[ExecuteInEditMode]
+using static GameManaging.GameState;
+using UnityEngine.Events;
+
+/// <summary>
+/// This script is used as a manager for playing dialogue.
+/// </summary>
 public class DialogueManager : MonoBehaviour
 {
     public static DialogueManager instance;
 
     [Header("Dialogue")]
     public TextMeshProUGUI text;
-    public TextMeshProUGUI nameText;
+    public TextMeshProUGUI speaker;
     public Image image;
     [Space]
     public GameObject textBox;
-    public GameObject nameBox;
+    public GameObject speakerBox;
     public GameObject imageBox;
     [Space]
-    public float textDelay;
+    public float textDelay = 0.3f;
 
     [Header("Animation")]
     [Tooltip("If no Animator is specified, no animation will be played")]
     public Animator animator;
-
-    private string prevLineName;
 
     private void Awake()
     {
@@ -44,6 +42,105 @@ public class DialogueManager : MonoBehaviour
         }
     }
 
+    public static void StartDialogue(DialogueLine[] dialogueLines)//, params string[] variables)
+    {
+        if(dialogueLines.Length > 0)
+        {
+            ChangeState(States.Busy);
+            if (instance.animator != null) instance.animator.SetBool("Active", true);
+
+            instance.StartCoroutine(instance.NextLine(dialogueLines));
+        }
+        else
+        {
+            Debug.LogWarning("Missing dialogue lines!");
+        }
+    }
+
+    public IEnumerator NextLine(DialogueLine[] lines, int lineIndex = 0)
+    {
+        UnityEvent interactEvent = InputManager.instance.interact;
+        DialogueLine currentLine = lines[lineIndex];
+
+        bool mustSkip = false;
+        UnityAction skipTrigger = () => mustSkip = true;
+        interactEvent.AddListener(skipTrigger.Invoke);
+
+        text.text = currentLine.dialogue;
+        text.maxVisibleCharacters = 0;
+
+        // if the dialogue line has an image or not
+        // set the image.sprite to the line's image
+        if (currentLine.image)
+        {
+            imageBox.SetActive(true);
+            image.sprite = currentLine.image;
+        }
+        else imageBox.SetActive(false);
+
+        // if the dialogue line has a speaker or not
+        // set the speaker.text to the line's speaker
+        if (currentLine.speaker.Length > 0)
+        {
+            speakerBox.SetActive(true);
+            speaker.text = currentLine.speaker;
+        }
+        else speakerBox.SetActive(false);
+
+        // gives the dialogue a typing effect
+        for (int charIndex = 0; charIndex <= currentLine.dialogue.Length; charIndex++)
+        {
+            text.maxVisibleCharacters += charIndex;
+
+            if (mustSkip && charIndex > 5)
+            {
+                text.maxVisibleCharacters = currentLine.dialogue.Length;
+                break;
+            }
+
+            yield return new WaitForSecondsRealtime(textDelay);
+        }
+
+        mustSkip = false;
+        interactEvent.RemoveListener(skipTrigger.Invoke);
+
+        // events for checking if the player has pressed the interact button
+        bool trigger = false;
+        UnityAction activateTrigger = () => trigger = true;
+
+        // waiting for the player to press the interact button
+        interactEvent.AddListener(activateTrigger.Invoke);
+        yield return new WaitUntil(() => trigger);
+        interactEvent.RemoveListener(activateTrigger.Invoke);
+
+        if (lineIndex + 1 < lines.Length)
+        {
+            StartCoroutine(NextLine(lines, ++lineIndex));
+            yield break;
+        }
+        else
+        {
+            if(animator != null) animator.SetBool("Active", false);
+
+            float animationLength = animator.GetCurrentAnimatorStateInfo(0).length;
+            yield return new WaitForSeconds(animationLength);
+
+            ChangeState(States.Playing);
+        }
+    }
+
+    // used to easily manage dialogue lines
+    [System.Serializable]
+    public struct DialogueLine
+    {
+        public string speaker;
+        public string dialogue;
+        public Sprite image;
+    }
+}
+
+
+/*
     // used as a way to setup the dialogue
     public static void StartDialogue(
         DialogueInteract.DialogueLine[] dialogueLines,
@@ -160,4 +257,4 @@ public class DialogueManager : MonoBehaviour
             instance.image.sprite = null;
         }
     }
-}
+*/

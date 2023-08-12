@@ -376,12 +376,12 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   text: {fileID: 963530038}
-  nameText: {fileID: 1458900242}
+  speaker: {fileID: 1458900242}
   image: {fileID: 519134950}
   textBox: {fileID: 963530035}
-  nameBox: {fileID: 1458900239}
+  speakerBox: {fileID: 1458900239}
   imageBox: {fileID: 519134948}
-  textDelay: 0.03
+  textDelay: 0.05
   animator: {fileID: 1096129472}
 --- !u!114 &529350373
 MonoBehaviour:
@@ -892,19 +892,19 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   dialogueLines:
-  - name: Speaker1
+  - speaker: 1
     dialogue: its me alec
     image: {fileID: 21300000, guid: 15d3c315af8faf2498573371308b9d3e, type: 3}
-  - name: Speaker1
+  - speaker: 1
     dialogue: This is a really real one piece moment
     image: {fileID: -2413806693520163455, guid: edaf7708849a6dd4fa5a828a0c6ebc29, type: 3}
-  - name: Speaker2
+  - speaker: 2
     dialogue: there was supposed to be my voice but I didnt record that apparently
     image: {fileID: 21300000, guid: 8272ea7c59da847458432e7c88bf7766, type: 3}
-  - name: Speaker3
+  - speaker: 3
     dialogue: Lorum ipsum idk the rest tbh
     image: {fileID: 21300000, guid: 51e0c1c1bb4924d41bab2ecec79e8956, type: 3}
-  - name: Speaker1
+  - speaker: 1
     dialogue: That's the most valid thign that has graced planet Eath
     image: {fileID: 21300000, guid: 8272ea7c59da847458432e7c88bf7766, type: 3}
   switchEnable: Start
@@ -1183,7 +1183,7 @@ GameObject:
   - component: {fileID: 1458900240}
   - component: {fileID: 1458900242}
   m_Layer: 5
-  m_Name: NameText
+  m_Name: Speaker
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -1501,10 +1501,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   item:
     name: Apple
-  dialogue:
-  - name: 
-    dialogue: You picked up {0}!
-    image: {fileID: 0}
+  dialogue: []
 --- !u!4 &1949823959
 Transform:
   m_ObjectHideFlags: 0
