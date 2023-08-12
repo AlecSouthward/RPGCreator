@@ -12,9 +12,10 @@ public class PlayerController : MonoBehaviour
 
     InputManager input;
     Vector2 inputAxis;
-    bool isMoving = false;
 
-    public Vector3 facingDir;
+    public bool IsMoving { get; private set; }
+
+    public Vector3 FacingDir { get; private set; }
 
     private void Awake()
     {
@@ -33,6 +34,7 @@ public class PlayerController : MonoBehaviour
     private void Start()
     {
         input = InputManager.instance;
+        IsMoving = false;
     }
 
     private void Update()
@@ -43,10 +45,10 @@ public class PlayerController : MonoBehaviour
 
             if (inputAxis.sqrMagnitude > 0 && inputAxis.sqrMagnitude <= 1)
             {
-                facingDir = inputAxis;
-                Vector3 newPosition = transform.position + facingDir;
+                FacingDir = inputAxis;
+                Vector3 newPosition = transform.position + FacingDir;
 
-                if (!isMoving && CanMove(newPosition))
+                if (!IsMoving && CanMove(newPosition))
                 {
                     StartCoroutine(Move(newPosition));
                 }
@@ -61,16 +63,16 @@ public class PlayerController : MonoBehaviour
 
     private IEnumerator Move(Vector3 targetPosition)
     {
-        isMoving = true;
+        IsMoving = true;
 
         while ((targetPosition - transform.position).sqrMagnitude > Mathf.Epsilon)
         {
-            transform.position = Vector3.MoveTowards(transform.position, targetPosition, speed * Time.deltaTime);
+            transform.position = Vector3.MoveTowards(transform.position, targetPosition, speed * Time.smoothDeltaTime);
 
-            yield return null;
+            yield return new WaitForEndOfFrame();
         }
 
-        isMoving = false;
+        IsMoving = false;
         transform.position = targetPosition;
     }
 }
